@@ -1,4 +1,4 @@
-import 'package:black_jack_game/screens/black_jack_game.dart';
+import 'package:black_jack_game/screens/black_jack_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
