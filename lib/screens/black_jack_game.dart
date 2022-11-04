@@ -19,9 +19,7 @@ class _BlackState extends State<BlackJackScreen> {
                 children: [
                   Column(
                     children: [
-                      // TODO: add score
-                      Text("Dealer's score"),
-                      //Dealer's cards
+                      const Text("Dealer's score"),
                       Container(
                         height: 200,
                         child: GridView.builder(
@@ -29,10 +27,8 @@ class _BlackState extends State<BlackJackScreen> {
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                             ),
-                            //TODO:- Change item count
                             itemCount: 0,
                             itemBuilder: (context, index) {
-                              //TODO:- Return Dealer's Card here
                               return Container();
                             }),
                       ),
@@ -40,7 +36,6 @@ class _BlackState extends State<BlackJackScreen> {
                   ),
                   Column(
                     children: [
-                      // TODO: add score
                       const Text("Player's score"),
                       Container(
                         height: 200,
@@ -49,10 +44,8 @@ class _BlackState extends State<BlackJackScreen> {
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                             ),
-                            //TODO:- Change item count
                             itemCount: 0,
                             itemBuilder: (context, index) {
-                              //TODO:- Return Player's Card here
                               return Container();
                             }),
                       ),
@@ -84,7 +77,7 @@ class _BlackState extends State<BlackJackScreen> {
                   _isGameStarted = true;
                 });
               },
-              child: Text("Start Game"),
+              child: const Text("Start Game"),
             )),
     );
   }
