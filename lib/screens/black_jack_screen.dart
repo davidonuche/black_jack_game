@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:black_jack_game/widgets/cards_grid_view.dart';
+import 'package:black_jack_game/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class BlackJackScreen extends StatefulWidget {
@@ -106,29 +108,29 @@ class _BlackState extends State<BlackJackScreen> {
     Random random = Random();
 
     // Random card one for dealer
-    String cardOneKey =
-        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
+    String cardOneKey = playingCards.keys.elementAt(random.nextInt(
+        playingCards.keys.length)); // from 0 to playerCards.keys.length
 
     // Remove card one key from playingcards
     playingCards.removeWhere((key, value) => key == cardOneKey);
 
     // Random card two for dealer
     String cardTwoKey =
-        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
+        playingCards.keys.elementAt(random.nextInt(playingCards.length));
 
     // Remove card two key from playingcards
     playingCards.removeWhere((key, value) => key == cardTwoKey);
 
     // Random card three for dealer
     String cardThreeKey =
-        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
+        playingCards.keys.elementAt(random.nextInt(playingCards.length));
 
     // Remove card three key from playingcards
     playingCards.removeWhere((key, value) => key == cardThreeKey);
 
     // Random card four for dealer
     String cardFourKey =
-        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
+        playingCards.keys.elementAt(random.nextInt(playingCards.length));
 
     // Remove card Four key from playingcards
     playingCards.removeWhere((key, value) => key == cardFourKey);
@@ -157,14 +159,35 @@ class _BlackState extends State<BlackJackScreen> {
     playersScore =
         deckOfCards[playersFirstCard]! + deckOfCards[playersSecondCard]!;
 
-        setState(() {
-          
-        });
+    if (dealersScore <= 14) {
+      String thirdDealersCards =
+          playingCards.keys.elementAt(random.nextInt(playingCards.length));
+
+      dealersCards.add(Image.asset(thirdDealersCards));
+
+      dealersScore = dealersScore + deckOfCards[thirdDealersCards]!;
+    }
+
+    setState(() {});
   }
 
   // Add extra card to player
-  void addCard() {}
+  void addCard() {
+    Random random = Random();
+    if (playingCards.length > 0) {
+      String cardKey =
+          playingCards.keys.elementAt(random.nextInt(playingCards.length));
+      playingCards.removeWhere((key, value) => key == cardKey);
 
+      myCards.add(Image.asset(cardKey));
+
+      playersScore = playersScore + deckOfCards[cardKey]!;
+
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isGameStarted
@@ -174,65 +197,60 @@ class _BlackState extends State<BlackJackScreen> {
                 children: [
                   Column(
                     children: [
-                      const Text("Dealer's score"),
-                      Container(
-                        height: 200,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: 0,
-                            itemBuilder: (context, index) {
-                              return Container();
-                            }),
+                      Text(
+                        "Dealer's score $dealersScore",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: dealersScore <= 21
+                              ? Colors.green[900]
+                              : Colors.red[900],
+                        ),
                       ),
+                      CardGridView(cards: dealersCards),
                     ],
                   ),
                   Column(
                     children: [
-                      const Text("Player's score"),
-                      Container(
-                        height: 200,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: 0,
-                            itemBuilder: (context, index) {
-                              return Container();
-                            }),
+                      Text(
+                        "Player's score $playersScore",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: playersScore <= 21
+                              ? Colors.green[900]
+                              : Colors.red[900],
+                        ),
                       ),
+                      CardGridView(cards: myCards),
                     ],
                   ),
-                  Column(
-                    children: [
-                      MaterialButton(
-                        onPressed: () {},
-                        child: Text("Another Card"),
-                        color: Colors.brown[200],
-                      ),
-                      MaterialButton(
-                        onPressed: () {},
-                        child: Text("Next Round"),
-                        color: Colors.brown[200],
-                      ),
-                    ],
+                  IntrinsicWidth(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CustomButton(
+                          onPressed: () {
+                            addCard();
+                          },
+                          label: "Add Card",
+                        ),
+                        CustomButton(
+                            onPressed: () {
+                              startNewRound();
+                            },
+                            label: "Next Round"),
+                      ],
+                    ),
                   )
                 ],
               ),
             )
           : Center(
-              child: MaterialButton(
-              color: Colors.brown[200],
-              minWidth: 150,
-              onPressed: () {
-                setState(() {
-                  startNewRound();
-                });
-              },
-              child: const Text("Start Game"),
+              child: CustomButton(
+              onPressed: () => startNewRound(),
+              label: "Start Game",
             )),
     );
   }
