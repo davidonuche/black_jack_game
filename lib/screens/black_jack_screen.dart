@@ -20,8 +20,8 @@ class _BlackState extends State<BlackJackScreen> {
   String? dealersFirstCard;
   String? dealersSecondCard;
 
-  String? playersFirstCards;
-  String? playersSecondCards;
+  String? playersFirstCard;
+  String? playersSecondCard;
 
   // Scores
   int dealersScore = 0;
@@ -92,7 +92,9 @@ class _BlackState extends State<BlackJackScreen> {
   }
 
   // Reset the round and reset cards
-  void changeCards() {
+  void startNewRound() {
+    _isGameStarted = true;
+
     // Start new round with full deckOfCards
     playingCards = {};
     playingCards.addAll(deckOfCards);
@@ -117,19 +119,47 @@ class _BlackState extends State<BlackJackScreen> {
     // Remove card two key from playingcards
     playingCards.removeWhere((key, value) => key == cardTwoKey);
 
+    // Random card three for dealer
+    String cardThreeKey =
+        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
+
+    // Remove card three key from playingcards
+    playingCards.removeWhere((key, value) => key == cardThreeKey);
+
     // Random card four for dealer
     String cardFourKey =
         playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
 
-        // Remove card Four key from playingcards
-         playingCards.removeWhere((key, value) => key == cardFourKey);
+    // Remove card Four key from playingcards
+    playingCards.removeWhere((key, value) => key == cardFourKey);
 
-         // Random card five for dealer
-    String cardFiveKey =
-        playingCards.keys.elementAt(random.nextInt(playingCards.keys.length));
-        
-        // Remove card Five key from playingcards
-         playingCards.removeWhere((key, value) => key == cardFiveKey);
+    // Assign cards keys to dealer's cards
+    dealersFirstCard = cardOneKey;
+    dealersSecondCard = cardTwoKey;
+
+    // Assign cards keys to player's cards
+    playersFirstCard = cardThreeKey;
+    playersSecondCard = cardFourKey;
+
+    // Adding dealers cards images to display them in grid view
+    dealersCards.add(Image.asset(dealersFirstCard!));
+    dealersCards.add(Image.asset(dealersSecondCard!));
+
+    // Score for dealer
+    dealersScore =
+        deckOfCards[dealersFirstCard]! + deckOfCards[dealersSecondCard]!;
+
+    // Adding players cards images to display them in grid view
+    myCards.add(Image.asset(playersFirstCard!));
+    myCards.add(Image.asset(playersSecondCard!));
+
+    // Score for player (my score)
+    playersScore =
+        deckOfCards[playersFirstCard]! + deckOfCards[playersSecondCard]!;
+
+        setState(() {
+          
+        });
   }
 
   // Add extra card to player
@@ -199,7 +229,7 @@ class _BlackState extends State<BlackJackScreen> {
               minWidth: 150,
               onPressed: () {
                 setState(() {
-                  _isGameStarted = true;
+                  startNewRound();
                 });
               },
               child: const Text("Start Game"),
