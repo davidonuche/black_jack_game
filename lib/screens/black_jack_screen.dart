@@ -174,7 +174,7 @@ class _BlackState extends State<BlackJackScreen> {
   // Add extra card to player
   void addCard() {
     Random random = Random();
-    if (playingCards.length > 0) {
+    if (playingCards.isNotEmpty) {
       String cardKey =
           playingCards.keys.elementAt(random.nextInt(playingCards.length));
       playingCards.removeWhere((key, value) => key == cardKey);
